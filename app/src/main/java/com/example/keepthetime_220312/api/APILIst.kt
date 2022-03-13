@@ -1,12 +1,8 @@
 package com.example.keepthetime_220312.api
 
 import com.example.keepthetime_220312.datas.BasicResponse
-import org.json.JSONObject
 import retrofit2.Call
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.POST
-import retrofit2.http.PUT
+import retrofit2.http.*
 
 // keepthetime.xyz 서버에 있는 기능에 접속하는 방법을 명시하는 인터페이스.
 
@@ -27,8 +23,21 @@ interface APILIst {
     @FormUrlEncoded
     @PUT("/user")
     fun putRequestSignUp(
-        @Field("email") email : String,
-        @Field("password") pw : String,
-        @Field("nick_name") nick : String,
+        @Field("email") email: String,
+        @Field("password") pw: String,
+        @Field("nick_name") nick: String,
+    ): Call<BasicResponse>
+
+//    중복검사 기능 : GET - /user/check
+
+    @GET("/user/check") // GET방식은, FormUrlEncoded가 필요없다.
+    fun getRequestDuplicatedCheck(
+        @Query("type") type: String,
+        @Query("value") value: String,
+    ): Call<BasicResponse>
+
+    @GET("/user")
+    fun getRequestMyInfo(
+        @Header("X-Http-Token") token: String,
     ) : Call<BasicResponse>
 }
