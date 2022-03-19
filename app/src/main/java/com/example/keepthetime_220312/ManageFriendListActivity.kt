@@ -1,16 +1,21 @@
 package com.example.keepthetime_220312
 
 import android.os.Bundle
-import android.service.autofill.UserData
 import androidx.databinding.DataBindingUtil
+import com.example.keepthetime_220312.adapters.FriendViewPagerAdapter
+import com.example.keepthetime_220312.adapters.MyFriendAdapter
 import com.example.keepthetime_220312.databinding.ActivityManageFriendListBinding
+import com.example.keepthetime_220312.datas.BasicResponse
+import com.example.keepthetime_220312.datas.UserData
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class ManageFriendListActivity : BaseActivity() {
 
     lateinit var binding: ActivityManageFriendListBinding
 
-    var mMyFriendList = ArrayList<UserData>()
-
+    lateinit var friendViewPagerAdapter : FriendViewPagerAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_manage_friend_list)
@@ -24,7 +29,16 @@ class ManageFriendListActivity : BaseActivity() {
 
     override fun setValues() {
 
-//        내 친구목록에 데이터 채우기.
-//         => 서버가 실제로 내려주는 친구목록을 채워보자. (API 통신과 결합)
+//      BaseActivity가 물려준 txtTitle을 수정
+        txtTitle.text = "친구관리"
+
+        friendViewPagerAdapter = FriendViewPagerAdapter(supportFragmentManager)
+        binding.friendViewPager.adapter = friendViewPagerAdapter
+
+//        탭레이아웃 세팅
+        binding.friendTabLayout.setupWithViewPager(binding.friendViewPager)
+
+
     }
+
 }

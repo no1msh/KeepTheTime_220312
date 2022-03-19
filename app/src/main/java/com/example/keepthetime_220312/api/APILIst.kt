@@ -39,5 +39,24 @@ interface APILIst {
     @GET("/user")
     fun getRequestMyInfo(
         @Header("X-Http-Token") token: String,
-    ) : Call<BasicResponse>
+    ): Call<BasicResponse>
+
+//    토큰값을 매번 첨부하는 코드를 적기는 번거롭다
+//    자동으로 토큰을 첨부하는 세팅. (API Request 호출 세팅)
+
+    @GET("/user/friend")
+    fun getRequestFriendList(
+        @Query("type") type: String,
+    ): Call<BasicResponse>
+
+    @GET("/search/user")
+    fun getRequestSearchUser(
+        @Query("nickname") nickname: String,
+    ): Call<BasicResponse>
+
+    @FormUrlEncoded
+    @POST("/user/friend")
+    fun postRequestAddFriend(
+        @Field("user_id") userId: Int,
+    ): Call<BasicResponse>
 }

@@ -24,6 +24,7 @@ class LoginActivity : BaseActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
         setupEvents()
         setValues()
+        setCustomActionBar()
     }
 
     override fun setupEvents() {
@@ -43,7 +44,7 @@ class LoginActivity : BaseActivity() {
 
 //            keepthetime.xyz / 로그인 기능에 아이디 / 비번을 보내보자.
 
-            val myRetrofit = ServerAPI.getRetrofit()
+            val myRetrofit = ServerAPI.getRetrofit(mContext)
             val myApiList = myRetrofit.create(APILIst::class.java)
 
             apiList.postRequestLogin(inputId, inputPw).enqueue(object : Callback<BasicResponse> {

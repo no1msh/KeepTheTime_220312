@@ -2,7 +2,11 @@ package com.example.keepthetime_220312
 
 import android.content.Context
 import android.os.Bundle
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import com.example.keepthetime_220312.api.APILIst
 import com.example.keepthetime_220312.api.ServerAPI
 import retrofit2.create
@@ -18,6 +22,11 @@ abstract class BaseActivity : AppCompatActivity() {
 //    apiList : 앱에서 활용할 수 있는 API 목록.
     lateinit var apiList: APILIst
 
+//    멤버변수 : 다른 화면들이 상속 받아 활용하는 변수.
+    lateinit var txtTitle: TextView
+    lateinit var imgBack : ImageView
+
+
 //    다른 화면의super.onCreate가 실행될 때 , 부가적으로 실행해줄 코드들 추가
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,8 +35,17 @@ abstract class BaseActivity : AppCompatActivity() {
 
 //    apiList 변수에 세팅
 
-        val retrofit = ServerAPI.getRetrofit()
+        val retrofit = ServerAPI.getRetrofit(mContext)
         apiList = retrofit.create(APILIst::class.java)
+
+//    액션바도 설정 (액션바가 있는 화면이라면)
+//      코틀린의 null 관리 : ? 가 이변수가 실제로 있는가? 질문 => 실제로 있다면, 별개의 함수(setCustomActionBar) 실행
+
+        supportActionBar?.let {
+
+//            supportActionBar가 null이 아닐때 (실체가 있을 때) 실행할 코드 : let { }
+            setCustomActionBar()
+        }
     }
 
 //    함수 - setupEvents / setValues 모든 화면이 ( 각각 내용이 다르게 ) 구현.
@@ -35,4 +53,25 @@ abstract class BaseActivity : AppCompatActivity() {
 //    클래스 자체도 추상 클래스여야 , 추상 함수 보유 가능
     abstract fun setupEvents()
     abstract fun setValues()
+
+//    커스텀 액션바 설정 함수 추가. => 실행 내용도 작성, 구체적 방안도 상속 시키자.
+
+    fun setCustomActionBar() {
+
+        val defaultActionBar = supportActionBar!!
+        defaultActionBar.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
+        defaultActionBar.setCustomView(R.layout.my_custom_action_bar)
+
+        val toolbar = defaultActionBar.customView.parent as Toolbar
+        toolbar.setContentInsetsAbsolute(0, 0)
+
+//        커스텀 뷰 적용 이후에 txtTitle에 연결.
+        txtTitle = defaultActionBar.customView.findViewById(R.id.txtTitle)
+        imgBack = defaultActionBar.customView.findViewById(R.id.imgBack)
+
+//        imgBack은 눌리면 할일이 모든 화면에서 동일합니다.
+        imgBack.setOnClickListener {
+            finish()
+        }
+    }
 }
