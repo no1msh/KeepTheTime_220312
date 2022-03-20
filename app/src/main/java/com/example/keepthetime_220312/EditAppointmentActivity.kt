@@ -9,10 +9,14 @@ import android.widget.TimePicker
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.example.keepthetime_220312.databinding.ActivityEditAppointmentBinding
+import com.example.keepthetime_220312.datas.BasicResponse
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.MarkerIcons
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.min
@@ -89,7 +93,7 @@ class EditAppointmentActivity : BaseActivity() {
                     mSelectedDatetimeCal.set(Calendar.MINUTE, minute)
 //                    txtTime의 문구를 "오후 7시 5분" 양식으로 가공
 
-                    val sdf = SimpleDateFormat("a htl m분")
+                    val sdf = SimpleDateFormat("a h시 m분")
 
                     binding.txtTime.text = sdf.format(mSelectedDatetimeCal.time) // Date 형태인 time 변수 활용
 
@@ -106,6 +110,81 @@ class EditAppointmentActivity : BaseActivity() {
             ).show()
         }
 
+        binding.btnSave.setOnClickListener {
+
+//            입력한 값들 추출 = > 서버에 전송
+
+            var inputTitle = binding.edtTitle.text.toString()
+            if ((inputTitle.isEmpty())){
+                Toast.makeText(mContext, "제목을 입력해야 합니다.", Toast.LENGTH_SHORT).show()
+//                실행중인 함수 강제 종료 => 결과 임의 설정.
+                return@setOnClickListener
+            }
+
+
+//            약속일시 : mSelectedDatetimeCal 의 일시를 => "2022-03-20 14:19:50" 형태로 가공해서 첨부
+
+
+//            약속 일시 가공전에, 일자 / 시간 모두 선택했는지 체크. 선택하지 않은 항목이 있다면 안내 + 함수 종료
+            if (binding.txtDate.text == "약속 일자" || binding.txtTime.text == "약속 시간") {
+                Toast.makeText(mContext, "일시를 모두 선택해주세요.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+
+            val inputPlaceName = binding.edtPlaceName.text.toString()
+            if (inputPlaceName.isEmpty()) {
+                Toast.makeText(mContext, "약속 장소 이름을 입력해주세요.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+
+            val serverFormat = SimpleDateFormat("yyyy-MM-dd HH:mm")
+            val serverDateTimeStr = serverFormat.format(mSelectedDatetimeCal.time) // 첨부할 약속 일시
+
+//            네이버 지도에 마커로 찍어둔 장소 > 서버에 전송?
+
+
+
+
+
+//            myMarker가 실제로 만들어져 있는지? 그렇지 않다면 장소 입력 안내 + 함수 종료.
+            if (myMarker == null) {
+                Toast.makeText(mContext, "지도를 클릭해서, 약속 장소를 선택해주세요.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+
+//            내가 찍어둔 마커가 있다고 전제하고 코딩
+            val lat = myMarker!!.position.latitude // 찍힌 마커의 위도 추출
+            val lng = myMarker!!.position.longitude // 찍힌 마커의 경도 추출
+
+//            서버에 파라미터값들 전송. (API 호출)
+            apiList.postRequestAppointment(
+                inputTitle,
+                serverDateTimeStr,
+                inputPlaceName,
+                lat,
+                lng
+            ).enqueue(object : Callback<BasicResponse>{
+                override fun onResponse(
+                    call: Call<BasicResponse>,
+                    response: Response<BasicResponse>
+                ) {
+                    if (response.isSuccessful){
+//                        무조건 성공으로 처리. 화면 종료
+
+                        Toast.makeText(mContext, "약속을 등록했습니다.", Toast.LENGTH_SHORT).show()
+                        finish()
+                    }
+                }
+
+                override fun onFailure(call: Call<BasicResponse>, t: Throwable) {
+
+                }
+
+            })
+        }
     }
 
     override fun setValues() {

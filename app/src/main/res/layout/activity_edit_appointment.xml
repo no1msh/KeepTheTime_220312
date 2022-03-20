@@ -74,5 +74,11 @@
             android:id="@+id/mapView"
             android:layout_width="match_parent"
             android:layout_height="250dp" />
+
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="약속 설정하기"/>
     </LinearLayout>
 </layout>
