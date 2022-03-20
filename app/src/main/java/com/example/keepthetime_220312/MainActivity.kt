@@ -37,8 +37,15 @@ class MainActivity : BaseActivity() {
 //            it 변수 : 선택된 메뉴가 뭔지 알려줌.
 
             binding.mainViewPager2.currentItem = when(it.itemId) {
-                R.id.home -> 0
-                else -> 1
+                R.id.home -> {
+                    imgAdd.visibility = View.VISIBLE
+                    0
+                }
+                else -> {
+                    imgAdd.visibility = View.GONE
+                    1
+                }
+
             }
 
             return@setOnItemSelectedListener true
@@ -68,6 +75,7 @@ class MainActivity : BaseActivity() {
 //        상속받은 imgBack 숨김처리
 
         imgBack.visibility = View.GONE
+        imgAdd.visibility = View.VISIBLE
     }
 
 
