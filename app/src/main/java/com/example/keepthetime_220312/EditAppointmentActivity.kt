@@ -2,6 +2,7 @@ package com.example.keepthetime_220312
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.graphics.Color
 import android.os.Bundle
 import android.widget.DatePicker
 import android.widget.TimePicker
@@ -10,6 +11,8 @@ import androidx.databinding.DataBindingUtil
 import com.example.keepthetime_220312.databinding.ActivityEditAppointmentBinding
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
+import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.util.MarkerIcons
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.min
@@ -21,6 +24,9 @@ class EditAppointmentActivity : BaseActivity() {
 //    선택한 약속일시를 저장하는 Calendar 변수
 
     val mSelectedDatetimeCal = Calendar.getInstance()
+
+//
+    var myMarker : Marker? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -107,10 +113,45 @@ class EditAppointmentActivity : BaseActivity() {
 //           it 변수 대신 문서와 같은 이름의 변수 naverMap에 옮겨 담고 사용.
             val naverMap = it
 
-//            기본 지도의 시작화면 : 서울 시청 => 네이버 지도의 시작 좌표 : 넵플러스 학원
+//            기본 지도의 시작화면 : 서울 시청 => 네이버 지도의 시작 좌표 : 부천 종합 운동장
 
             val cameraUpdate = CameraUpdate.scrollTo(LatLng(37.502790283581284, 126.79867835775708))
             naverMap.moveCamera(cameraUpdate)
+
+//            마커띄우기
+
+            val marker = Marker()
+            marker.position = LatLng(37.502790283581284, 126.79867835775708)
+            marker.map = naverMap
+
+//            마커 색상 변경
+            marker.icon = MarkerIcons.LIGHTBLUE // 원하는 색 커스텀
+            marker.iconTintColor = Color.parseColor("#FF0000") // 안드로이드가 제공하는 색
+
+//            마커크기 변경
+            marker.width = 40
+            marker.height = 40
+
+//            네이버 지도의 클릭 이벤트
+
+            naverMap.setOnMapClickListener { pointF, latLng ->
+
+//                클릭된 좌표 latLng 변수의 내용을 토스트로 출력
+//                Toast.makeText(mContext, "위도 : ${latLng.latitude} , 경도 : ${latLng.longitude}", Toast.LENGTH_SHORT).show()
+
+//                마커를 클릭된 지점에 설정.
+
+//                myMarker가 만들어진게 없다면 새로 마커 생성.
+//                만들어진게 있다면, 기존 마커 재활용.
+
+                if (myMarker == null)
+                {
+                    myMarker = Marker()
+                }
+                myMarker!!.position = latLng
+                myMarker!!.map = naverMap
+            }
+
         }
     }
 }
