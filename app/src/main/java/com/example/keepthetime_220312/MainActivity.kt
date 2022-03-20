@@ -1,5 +1,6 @@
 package com.example.keepthetime_220312
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -30,6 +31,17 @@ class MainActivity : BaseActivity() {
     }
 
     override fun setupEvents() {
+
+//        상속받아온 imgAdd의 이벤트 처리
+
+        imgAdd.setOnClickListener {
+
+            val myIntent = Intent(mContext,EditAppointmentActivity :: class.java)
+            startActivity(myIntent)
+        }
+
+
+
 //    바텀 네비게이션의 이벤트 처리.
 
         binding.mainBottomNav.setOnItemSelectedListener {
