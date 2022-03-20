@@ -8,6 +8,8 @@ import android.widget.TimePicker
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.example.keepthetime_220312.databinding.ActivityEditAppointmentBinding
+import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.CameraUpdate
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.min
@@ -101,6 +103,14 @@ class EditAppointmentActivity : BaseActivity() {
     }
 
     override fun setValues() {
+        binding.mapView.getMapAsync {
+//           it 변수 대신 문서와 같은 이름의 변수 naverMap에 옮겨 담고 사용.
+            val naverMap = it
 
+//            기본 지도의 시작화면 : 서울 시청 => 네이버 지도의 시작 좌표 : 넵플러스 학원
+
+            val cameraUpdate = CameraUpdate.scrollTo(LatLng(37.502790283581284, 126.79867835775708))
+            naverMap.moveCamera(cameraUpdate)
+        }
     }
 }
