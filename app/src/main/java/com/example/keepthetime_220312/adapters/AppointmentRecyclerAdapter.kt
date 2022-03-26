@@ -36,6 +36,8 @@ class AppointmentRecyclerAdapter(
 
             imgMap.setOnClickListener {
                 val myIntent = Intent(mContext, ViewMapActivity :: class.java)
+                myIntent.putExtra("appointment", data)
+
                 mContext.startActivity(myIntent) // startActivity는 , 화면 / 프래그먼트에서 상속 받는 기능. => Context가 상속
             }
         }

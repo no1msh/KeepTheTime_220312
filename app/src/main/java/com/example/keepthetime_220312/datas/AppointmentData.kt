@@ -1,5 +1,7 @@
 package com.example.keepthetime_220312.datas
 
+import java.io.Serializable
+
 class AppointmentData(
     val id: Int,
     val user_Id : Int,
@@ -13,5 +15,5 @@ class AppointmentData(
     val longitude : Double,
 
 
-) {
+) :Serializable{
 }
