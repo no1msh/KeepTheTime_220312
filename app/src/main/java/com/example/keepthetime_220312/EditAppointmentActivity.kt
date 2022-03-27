@@ -48,6 +48,17 @@ class EditAppointmentActivity : BaseActivity() {
 
     override fun setupEvents() {
 
+//        지도 / 스크롤뷰의 상하 스크롤이 겹쳐서 지도에 터치 관련 문제 발생
+//        지도 위에 텍스트뷰를 텊어두고, 해당 텍스트뷰에 손이 닿으면(터치O 클릭X) => 스크롤뷰의 스크롤을 일시정지.
+
+        binding.txtScrollHelp.setOnTouchListener { view, motionEvent ->
+
+            binding.scrollView.requestDisallowInterceptTouchEvent(true)
+
+//         리턴처리 필요 : 손이 닿아도 밑에 깔린 지도의 이벤트도 실행
+            return@setOnTouchListener false;
+        }
+
         binding.txtDate.setOnClickListener {
 
 //            날짜가 선택되면 할 일 저장
@@ -166,10 +177,20 @@ class EditAppointmentActivity : BaseActivity() {
             val lat = myMarker!!.position.latitude // 찍힌 마커의 위도 추출
             val lng = myMarker!!.position.longitude // 찍힌 마커의 경도 추출
 
+//            출발지 목록 Spinner에서 , 어떤 출발지를 선택했는지 받아오자. ==> 출발지 정보로 서버에 첨부.
+
+//            스피너의 선택 위치 추출
+            val selectedPosition = binding.startingPointSpinner.selectedItemPosition
+//            해당 위치에 맞는 출발지 데이터 가져오기
+            val selectedStartingPoint = mStartingPointList[selectedPosition]
+
 //            서버에 파라미터값들 전송. (API 호출)
             apiList.postRequestAppointment(
                 inputTitle,
                 serverDateTimeStr,
+                selectedStartingPoint.name,
+                selectedStartingPoint.latitude,
+                selectedStartingPoint.longitude,
                 inputPlaceName,
                 lat,
                 lng
