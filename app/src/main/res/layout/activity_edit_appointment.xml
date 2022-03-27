@@ -69,6 +69,7 @@
             android:id="@+id/startingPointSpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:spinnerMode="dialog"
             android:layout_marginTop="5dp"/>
 
         <TextView
