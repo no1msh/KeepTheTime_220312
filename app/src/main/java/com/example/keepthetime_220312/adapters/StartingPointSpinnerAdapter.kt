@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.TextView
 import com.example.keepthetime_220312.R
 import com.example.keepthetime_220312.datas.StartingPointData
 
@@ -24,6 +25,20 @@ class StartingPointSpinnerAdapter(
         }
 
         val row = tempRow!!
+
+        val data = mList[position]
+
+        val txtStartingPointName = row.findViewById<TextView>(R.id.txtStartingPointName)
+        val txtPrimary = row.findViewById<TextView>(R.id.txtPrimary)
+
+        txtStartingPointName.text = data.name
+
+        if(data.is_primary) {
+            txtPrimary.visibility = View.VISIBLE
+        }
+        else {
+            txtPrimary.visibility = View.GONE
+        }
 
         return row
     }
