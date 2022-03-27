@@ -21,6 +21,7 @@ class ManageStartingPointActivity : BaseActivity() {
     val mStartingPointList = ArrayList<StartingPointData>()
 
     lateinit var mAdapter : StartingPointRecyclerAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this,R.layout.activity_manage_starting_point)
@@ -52,6 +53,7 @@ class ManageStartingPointActivity : BaseActivity() {
     }
 
     fun getMyStartingPointFromServer() {
+
         apiList.getRequestMyStartingPoint().enqueue( object : Callback<BasicResponse> {
             override fun onResponse(call: Call<BasicResponse>, response: Response<BasicResponse>) {
 
