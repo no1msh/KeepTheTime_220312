@@ -8,6 +8,7 @@ import android.widget.DatePicker
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import com.example.keepthetime_220312.adapters.StartingPointSpinnerAdapter
 import com.example.keepthetime_220312.databinding.ActivityEditAppointmentBinding
 import com.example.keepthetime_220312.datas.BasicResponse
 import com.example.keepthetime_220312.datas.StartingPointData
@@ -35,6 +36,8 @@ class EditAppointmentActivity : BaseActivity() {
     var myMarker : Marker? = null
 
     val mStartingPointList = ArrayList<StartingPointData>()
+
+    lateinit var mStartingPointSpinnerAdapter : StartingPointSpinnerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -238,6 +241,9 @@ class EditAppointmentActivity : BaseActivity() {
         }
 
         getMyStartingPointFromServer()
+
+        mStartingPointSpinnerAdapter = StartingPointSpinnerAdapter(mContext, R.layout.starting_point_list_item, mStartingPointList)
+        binding.startingPointSpinner.adapter = mStartingPointSpinnerAdapter
     }
 
 //    내 출발지 목록이 어떤것들이 있는지 불러오자.
@@ -250,7 +256,7 @@ class EditAppointmentActivity : BaseActivity() {
 
                 mStartingPointList.addAll( br.data.places )
 
-
+                mStartingPointSpinnerAdapter.notifyDataSetChanged()
             }
 
             override fun onFailure(call: Call<BasicResponse>, t: Throwable) {
